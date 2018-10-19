@@ -4,18 +4,23 @@ import java.io.*;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.stream.Collectors;
 
 public class ChatServer {
     private final String QUIT_SENTINEL = "\\quit";
     private final int MAX_CONN_QUEUE = 25;
+    private final int MAX_MESSAGE_LENGTH = 500;
     private final String HANDLE = "ANDERMA8>";
 
     private boolean isRunning = false;
     private ServerSocket server;
     private Socket client;
     private BufferedReader clientInput;
+    private BufferedReader keyboard;
 
-    public ChatServer() {}
+    public ChatServer() {
+        keyboard = new BufferedReader(new InputStreamReader(System.in));
+    }
 
     // Main loop.
     public void run(int port, InetAddress bindAddress) throws IOException {
@@ -36,20 +41,29 @@ public class ChatServer {
 
     // The chat loop with another host.
     private void doChat() throws IOException{
-        boolean chatComplete = false;  // Either host may indicate completion with a quit.
         clientInput = new BufferedReader(new InputStreamReader(client.getInputStream()));
-        String msg;
+        String receivedMessage;
+        String messageToSend;
 
-        while (!chatComplete) {
+        while (true) {
             // Wait for message from client
-            while ((msg = clientInput.readLine()) != null) {
-                System.out.println("MESSAGE: " + msg);
-                // TODO: check if quit
+            receivedMessage = readMessage();
+
+            // Check if client wants to end the chat.
+            if (isQuitSentinel(receivedMessage)) {
+                System.out.println("Client ended chat.");
+                break;
             }
-            // Check if client wants to quit
-            // Generate response for client.
-            // Check if user wants to quit.
-            // Send response to client.
+
+            messageToSend = createMessage();
+            sendMessage(messageToSend);
+
+            // Do this after sending to client, to inform it we want
+            // to end the chat.
+            if (isQuitSentinel(messageToSend)) {
+                System.out.println("Ending chat.");
+                break;
+            }
         }
     }
 
@@ -70,18 +84,34 @@ public class ChatServer {
         }
     }
 
-    private String createMessage() {
-        // Allow user to create a message.
-        return "";
+    private String createMessage() throws IOException{
+        System.out.print(HANDLE);
+        String msg = keyboard.readLine();
+
+        // Limit message length.
+        if(msg.length() > MAX_MESSAGE_LENGTH) {
+            msg = msg.substring(0, MAX_MESSAGE_LENGTH);
+        }
+
+        return msg;
     }
 
-    private void sendMessage(String msg) {
-        // Check if user wants to quit.
+    private void sendMessage(String msg) throws IOException {
+        PrintWriter out = new PrintWriter(client.getOutputStream());
+        msg = HANDLE + msg;
+        out.write(msg);
+        out.close();
     }
 
-    private void onMessageReceived(String msg) {
-        // Check if client wants to end communication.
+    private String readMessage() throws IOException {
+        String msg = clientInput.lines()
+                .collect(Collectors.joining());
+        System.out.println(msg);
+
+        return msg;
     }
 
-
+    private boolean isQuitSentinel(String candidate) {
+        return candidate.trim().equals(QUIT_SENTINEL);
+    }
 }
