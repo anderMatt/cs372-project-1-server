@@ -103,12 +103,14 @@ public class ChatServer {
         out.close();
     }
 
-    private String readMessage() throws IOException {
-        String msg = clientInput.lines()
-                .collect(Collectors.joining());
-        System.out.println(msg);
-
-        return msg;
+    private String readMessage() throws IOException{
+        String msg;
+        StringBuilder b = new StringBuilder();
+        while ((msg = clientInput.readLine()) != null) {
+            System.out.println(msg);
+            b.append(msg);
+        }
+        return b.toString();
     }
 
     private boolean isQuitSentinel(String candidate) {
