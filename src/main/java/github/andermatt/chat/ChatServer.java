@@ -104,13 +104,11 @@ public class ChatServer {
     }
 
     private String readMessage() throws IOException{
-        String msg;
-        StringBuilder b = new StringBuilder();
-        while ((msg = clientInput.readLine()) != null) {
-            System.out.println(msg);
-            b.append(msg);
-        }
-        return b.toString();
+        // TODO: possible to be multiple lines? Is this cutting off messages?
+        String msg = clientInput.readLine();
+        System.out.println(msg);
+
+        return msg;
     }
 
     private boolean isQuitSentinel(String candidate) {
