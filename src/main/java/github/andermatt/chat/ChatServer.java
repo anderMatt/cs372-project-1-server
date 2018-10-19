@@ -64,6 +64,8 @@ public class ChatServer {
                 System.out.println("Ending chat.");
                 break;
             }
+
+//            client = server.accept();
         }
     }
 
@@ -99,8 +101,8 @@ public class ChatServer {
     private void sendMessage(String msg) throws IOException {
         PrintWriter out = new PrintWriter(client.getOutputStream());
         msg = HANDLE + msg;
-        out.write(msg);
-        out.close();
+        out.write(msg);  // TODO: add '\n'?
+        out.flush();
     }
 
     private String readMessage() throws IOException{
