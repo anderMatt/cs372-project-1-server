@@ -7,10 +7,10 @@ import java.net.Socket;
 import java.util.stream.Collectors;
 
 public class ChatServer {
-    private final String QUIT_SENTINEL = "\\quit";
-    private final int MAX_CONN_QUEUE = 25;
-    private final int MAX_MESSAGE_LENGTH = 500;
-    private final String HANDLE = "ANDERMA8>";
+    private static final String QUIT_SENTINEL = "\\quit";
+    private static final int MAX_CONN_QUEUE = 25;
+    private static final int MAX_MESSAGE_LENGTH = 500;
+    private static final String HANDLE = "ANDERMA8>";
 
     private boolean isRunning = false;
     private ServerSocket server;
