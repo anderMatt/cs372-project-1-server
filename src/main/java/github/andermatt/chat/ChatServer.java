@@ -114,6 +114,11 @@ public class ChatServer {
     }
 
     private boolean isQuitSentinel(String candidate) {
+        // Need to remove the clients handle to evaluate the message text.
+        int handleIndex = candidate.indexOf('>');  // {username}>{msg}
+        if (handleIndex > -1) {
+            candidate = candidate.substring(handleIndex + 1);
+        }
         return candidate.trim().equals(QUIT_SENTINEL);
     }
 }
