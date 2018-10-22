@@ -13,7 +13,7 @@ public class Main {
 
         ChatServer server = new ChatServer();
         try {
-            System.out.println("Starting server on... " + InetAddress.getLocalHost() + ":" + port);
+            System.out.println("Starting server on " + InetAddress.getLocalHost() + ":" + port);
             server.run(port, InetAddress.getLocalHost());
         } catch (IOException ioex) {
             System.out.println("Error starting server: " + ioex);

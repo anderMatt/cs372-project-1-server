@@ -10,7 +10,7 @@ public class ChatServer {
     private static final String QUIT_SENTINEL = "\\quit";
     private static final int MAX_CONN_QUEUE = 25;
     private static final int MAX_MESSAGE_LENGTH = 500;
-    private static final String HANDLE = "ANDERMA8>";
+    private static final String HANDLE = "ANDERMA8>";  // Prepended to all messages sent to client.
 
     private boolean isRunning = false;
     private ServerSocket server;
@@ -37,9 +37,15 @@ public class ChatServer {
             doChat();
             client.close();
         }
+        shutdown();
     }
 
-    // The chat loop with another host.
+    /*
+    Chat loop with client. Follows this loop, until either user or client indicates desire to
+    end the chat, by sending the quit sentinel string.
+    - Receive message from client
+    - Send message to client
+     */
     private void doChat() throws IOException{
         clientInput = new BufferedReader(new InputStreamReader(client.getInputStream()));
         String receivedMessage;
@@ -64,11 +70,12 @@ public class ChatServer {
                 System.out.println("Ending chat.");
                 break;
             }
-
-//            client = server.accept();
         }
     }
 
+    /*
+    Resource cleanup.
+     */
     public void shutdown() {
         if (!isRunning) {
             throw new IllegalStateException("Server is not running.");
@@ -86,6 +93,10 @@ public class ChatServer {
         }
     }
 
+    /*
+    Create message from keyboard input to send to client. Chat will be
+    terminated if quit sentinel is entered.
+     */
     private String createMessage() throws IOException{
         System.out.print(HANDLE);
         String msg = keyboard.readLine();
@@ -98,6 +109,9 @@ public class ChatServer {
         return msg;
     }
 
+    /*
+    Sends 'msg' to the client.
+     */
     private void sendMessage(String msg) throws IOException {
         PrintWriter out = new PrintWriter(client.getOutputStream());
         msg = HANDLE + msg;
@@ -105,6 +119,9 @@ public class ChatServer {
         out.flush();
     }
 
+    /*
+    Prints message received from client.
+     */
     private String readMessage() throws IOException{
         // TODO: possible to be multiple lines? Is this cutting off messages?
         String msg = clientInput.readLine();
@@ -113,6 +130,11 @@ public class ChatServer {
         return msg;
     }
 
+    /*
+    Checks if the passed string is the quit sentinel. When checking messages
+    received from the client, the client's user handle needs to be removed before
+    evaluating the text.
+     */
     private boolean isQuitSentinel(String candidate) {
         // Need to remove the clients handle to evaluate the message text.
         int handleIndex = candidate.indexOf('>');  // {username}>{msg}
