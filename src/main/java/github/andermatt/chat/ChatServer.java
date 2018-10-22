@@ -31,8 +31,8 @@ public class ChatServer {
         this.server = new ServerSocket(port, MAX_CONN_QUEUE, bindAddress);
         this.isRunning = true;
 
-        System.out.println("Listening for connections...");
         while (this.isRunning) {
+            System.out.println("Listening for connections...");
             client = server.accept();
             doChat();
             client.close();
