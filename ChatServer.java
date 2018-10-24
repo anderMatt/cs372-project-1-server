@@ -58,7 +58,8 @@ public class ChatServer {
                 System.out.println("Client ended chat.");
                 break;
             }
-
+            System.out.println(receivedMessage);
+            
             messageToSend = createMessage();
             sendMessage(messageToSend);
 
@@ -123,7 +124,6 @@ public class ChatServer {
     private String readMessage() throws IOException{
         // TODO: possible to be multiple lines? Is this cutting off messages?
         String msg = clientInput.readLine();
-        System.out.println(msg);
 
         return msg;
     }
