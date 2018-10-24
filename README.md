@@ -2,7 +2,8 @@ Execution
 ===
 
 ```bash
-$ mvn clean install
-$ mvn package
-$ mvn:exec java -Dexec.mainClass="github.andermatt.Main" -Dexec.args="{PORT}"
+$ javac Main.java
+$ java Main <port>
+
+Source and compiled file names are case sensitive!
 ```
