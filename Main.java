@@ -1,10 +1,18 @@
+/*******************************************************************************
+ * Matthew Anderson
+ * 10/24/18
+ * CS 372 Project 1
+ *
+ * Command-line chat client that listens on a given port for connections from
+ * other chat clients. After a connection has been made, users are able to exchange
+ * text messages.
+ *******************************************************************************/
 import java.io.IOException;
 import java.net.InetAddress;
 
 public class Main {
 
     public static void main(String[] args) {
-        System.out.println("main running.");
         int port = getPortFromArgs(args);
 
         ChatServer server = new ChatServer();
@@ -16,6 +24,10 @@ public class Main {
         }
     }
 
+    /*
+    Parse port to listen on from command line arguments. If not provided,
+    or invalid, exit with an error.
+     */
     private static int getPortFromArgs(String[] args) {
         if (args.length < 1) {
             System.out.println("Usage: main port");
