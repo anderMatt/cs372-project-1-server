@@ -1,7 +1,3 @@
-package github.andermatt;
-
-import github.andermatt.chat.ChatServer;
-
 import java.io.IOException;
 import java.net.InetAddress;
 
